@@ -1,0 +1,12 @@
+.sorting-group {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.sorting-btn {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    color: #4A4A4A;
+    font-size: 12px;
+}
