@@ -1,5 +1,5 @@
-import { Radio } from 'antd'
-import './Sorting.css'
+import { Radio } from 'antd';
+import './Sorting.css';
 
 function Sorting() {
   return (
@@ -14,6 +14,6 @@ function Sorting() {
         ОПТИМАЛЬНЫЙ
       </Radio.Button>
     </Radio.Group>
-  )
+  );
 }
-export default Sorting
+export default Sorting;

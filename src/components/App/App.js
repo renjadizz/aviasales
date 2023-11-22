@@ -1,10 +1,10 @@
-import './App.css'
-import { Layout, Col, Row } from 'antd'
+import './App.css';
+import { Layout, Col, Row } from 'antd';
 
-import Filter from '../Filter/Filter'
-import Sorting from '../Sorting/Sorting'
-import Header from '../Header/Header'
-import Main from '../Main/Main'
+import Filter from '../Filter/Filter';
+import Sorting from '../Sorting/Sorting';
+import Header from '../Header/Header';
+import Main from '../Main/Main';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         </Col>
       </Row>
     </Layout>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,5 +1,5 @@
-import { Card } from 'antd'
-import './Ticket.css'
+import { Card } from 'antd';
+import './Ticket.css';
 
 function Ticket() {
   return (
@@ -23,6 +23,6 @@ function Ticket() {
         </div>
       </div>
     </Card>
-  )
+  );
 }
-export default Ticket
+export default Ticket;

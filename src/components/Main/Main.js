@@ -1,7 +1,7 @@
-import { Flex, Button } from 'antd'
+import { Flex, Button } from 'antd';
 
-import Ticket from '../Ticket/Ticket'
-import './Main.css'
+import Ticket from '../Ticket/Ticket';
+import './Main.css';
 
 function Main() {
   return (
@@ -12,6 +12,6 @@ function Main() {
         ПОКАЗАТЬ ЕЩЕ 5 БИЛЕТОВ!
       </Button>
     </Flex>
-  )
+  );
 }
-export default Main
+export default Main;
