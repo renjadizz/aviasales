@@ -1,9 +1,8 @@
-//import { useState } from 'react';
 import { Card, Space, Checkbox } from 'antd';
 import './Filter.css';
 import { connect } from 'react-redux';
 
-import { filtersChanged } from '../../redux/actions/index';
+import { filtersChanged } from '../../redux/actions/filters';
 
 function Filter({ filters, filtersChanged }) {
   const onChange = (e) => {
