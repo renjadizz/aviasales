@@ -1,29 +1,49 @@
-import { useState } from 'react';
+//import { useState } from 'react';
 import { Card, Space, Checkbox } from 'antd';
 import './Filter.css';
-const CheckboxGroup = Checkbox.Group;
-const plainOptions = ['Без пересадок', '1 пересадка', '2 пересадки', '3 пересадки'];
+import { connect } from 'react-redux';
 
-function Filter() {
-  const [checkedList, setCheckedList] = useState([]);
-  const checkAll = plainOptions.length === checkedList.length;
-  const indeterminate = checkedList.length > 0 && checkedList.length < plainOptions.length;
-  const onChange = (list) => {
-    setCheckedList(list);
+import { filtersChanged } from '../../redux/actions/index';
+
+function Filter({ filters, filtersChanged }) {
+  const onChange = (e) => {
+    let newState;
+    if (e.target.id === 'filter_all') {
+      newState = filters.map((obj) => ({ ...obj, checked: e.target.checked }));
+    } else {
+      newState = filters.map((obj) => (obj.id === e.target.id ? { ...obj, checked: e.target.checked } : obj));
+      const checkAllChecked = newState.filter((obj) => obj.id !== 'filter_all' && obj.checked === true);
+      if (checkAllChecked.length === filters.length - 1) {
+        newState[0].checked = true;
+      } else if (checkAllChecked.length === 0) {
+        newState[0].checked = false;
+      }
+    }
+    filtersChanged(newState);
   };
-  const onCheckAllChange = (e) => {
-    setCheckedList(e.target.checked ? plainOptions : []);
-  };
+
+  const checkBoxElements = [];
+  for (const elem of filters) {
+    checkBoxElements.push(
+      <Checkbox key={elem.id} id={elem.id} onChange={onChange} checked={elem.checked}>
+        {elem.name}
+      </Checkbox>
+    );
+  }
+
   return (
     <Space direction="vertical" size={16}>
       <Card className="filter" bodyStyle={{ padding: '10px 15px' }}>
         <p className="filter__title">Количество пересадок</p>
-        <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
-          Все
-        </Checkbox>
-        <CheckboxGroup className="filter__group" options={plainOptions} value={checkedList} onChange={onChange} />
+        <div className="filter__group">{checkBoxElements}</div>
       </Card>
     </Space>
   );
 }
-export default Filter;
+const mapStateToProps = (state) => {
+  return { filters: state.filters };
+};
+const mapDispatchToProps = {
+  filtersChanged,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);
