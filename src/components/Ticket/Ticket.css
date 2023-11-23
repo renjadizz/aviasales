@@ -46,3 +46,13 @@
   font-weight: 600;
   font-size: 14px;
 }
+
+.ticket__flights__stops{
+  width: 90px;
+}
+.ticket__flights__in-flight{
+  width: 65px;
+}
+.ticket__flights__places{
+  width: 90px;
+}
