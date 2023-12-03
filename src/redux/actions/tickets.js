@@ -23,7 +23,7 @@ const getTicketsThunkCreator = () => {
   return async (dispatch) => {
     dispatch(isLoading(true));
     let searchId = sessionStorage.getItem('searchId');
-    if (!searchId) {
+    if (!searchId || searchId === 'null') {
       searchId = await data.getSearchId();
       if (searchId instanceof Error) {
         dispatch(addError(searchId));
