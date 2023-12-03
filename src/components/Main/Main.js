@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { useEffect } from 'react';
 
 import { propComparator } from '../../utils/sortingHelper';
+import { propFiltrator } from '../../utils/filterHelper';
 import { getTicketsThunkCreator, showMoreTickets } from '../../redux/actions/tickets';
 import Ticket from '../Ticket/Ticket';
 import Error from '../Error/Error';
 import './Main.css';
 
-function Main({ sorting, tickets, getTicketsThunkCreator, showMoreTickets }) {
+function Main({ filters, sorting, tickets, getTicketsThunkCreator, showMoreTickets }) {
   useEffect(() => {
     getTicketsThunkCreator();
   }, []);
@@ -21,8 +22,18 @@ function Main({ sorting, tickets, getTicketsThunkCreator, showMoreTickets }) {
   let errorElem = null;
   let buttonElem = null;
   let ticketArray = tickets.tickets;
+  if (filters[0].checked !== true) {
+    let filtersArray = [];
+    for (const element of filters) {
+      if (element.checked === true && element.id !== 'filter_all') {
+        filtersArray.push(element.amount);
+      }
+    }
+    if (filtersArray.length > 0) ticketArray = ticketArray.filter(propFiltrator(filtersArray));
+  }
+
   if (sorting !== null) {
-    ticketArray = tickets.tickets.sort(propComparator(sorting));
+    ticketArray = ticketArray.sort(propComparator(sorting));
   }
   if (error) {
     errorElem = <Error message={error.message} />;
@@ -55,6 +66,7 @@ const mapStateToProps = (state) => {
   return {
     tickets: state.tickets,
     sorting: state.sorting,
+    filters: state.filters,
   };
 };
 const mapDispatchToProps = {
