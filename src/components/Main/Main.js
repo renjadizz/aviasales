@@ -2,29 +2,32 @@ import { Flex, Button } from 'antd';
 import { connect } from 'react-redux';
 import { useEffect } from 'react';
 
-import { getTicketsThunkCreator } from '../../redux/actions/tickets';
+import { getTicketsThunkCreator, showMoreTickets } from '../../redux/actions/tickets';
 import Ticket from '../Ticket/Ticket';
 import Error from '../Error/Error';
 import './Main.css';
 
-function Main({ tickets, getTicketsThunkCreator }) {
+function Main({ tickets, getTicketsThunkCreator, showMoreTickets }) {
   useEffect(() => {
     getTicketsThunkCreator();
   }, []);
+  const handleShowMoreTickets = () => {
+    showMoreTickets();
+  };
   const { loading, error, page } = tickets;
   let ticketElem = null;
-  let lastTicket = page + 5 - 1;
+  let lastTicket = page + 5;
   let errorElem = null;
   let buttonElem = null;
   if (error) {
     errorElem = <Error message={error.message} />;
   } else {
     if (tickets.tickets.length > 0) {
-      ticketElem = tickets.tickets.slice(page, lastTicket).map((elem) => {
+      ticketElem = tickets.tickets.slice(0, lastTicket).map((elem) => {
         return <Ticket key={elem.carrier + elem.price + elem.segments[0].duration} ticketInfo={elem} />;
       });
       buttonElem = (
-        <Button type="primary" className="ticket__btn">
+        <Button type="primary" className="ticket__btn" onClick={handleShowMoreTickets}>
           ПОКАЗАТЬ ЕЩЕ 5 БИЛЕТОВ!
         </Button>
       );
@@ -50,5 +53,6 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = {
   getTicketsThunkCreator,
+  showMoreTickets,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

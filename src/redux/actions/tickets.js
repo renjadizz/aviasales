@@ -47,4 +47,9 @@ const getTicketsThunkCreator = () => {
     }
   };
 };
-export { getTicketsThunkCreator };
+const showMoreTickets = () => {
+  return {
+    type: 'SHOW_MORE_TICKETS',
+  };
+};
+export { getTicketsThunkCreator, showMoreTickets };

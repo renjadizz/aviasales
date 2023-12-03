@@ -16,6 +16,8 @@ function tickets(state = initialState, action) {
       return { ...state, tickets: action.payload };
     case 'FETCH_TICKETS_FAILURE':
       return { ...state, error: action.payload };
+    case 'SHOW_MORE_TICKETS':
+      return { ...state, page: state.page + 5 };
     default:
       return state;
   }
