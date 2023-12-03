@@ -10,6 +10,12 @@ function Ticket({ ticketInfo }) {
     const date2 = add(date1, { minutes: elem.duration });
     const date1Formatted = format(date1, 'hh:mm');
     const date2Formatted = format(date2, 'hh:mm');
+    let transferAmount = 'Без пересадок';
+    if (elem.stops.length === 1) {
+      transferAmount = '1 пересадка';
+    } else if (elem.stops.length > 1) {
+      transferAmount = `${elem.stops.length} пересадки`;
+    }
     return (
       <div className="ticket__flights" key={elem.origin + elem.destination + elem.duration}>
         <div className="ticket__flights__places">
@@ -27,7 +33,7 @@ function Ticket({ ticketInfo }) {
           </p>
         </div>
         <div className="ticket__flights__stops">
-          <p className="ticket__flights__header">{elem.stops.length} пересадки</p>
+          <p className="ticket__flights__header">{transferAmount}</p>
           <p className="ticket__flights__main">{elem.stops.toString()}</p>
         </div>
       </div>
