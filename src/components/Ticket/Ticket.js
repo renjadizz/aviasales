@@ -3,6 +3,11 @@ import './Ticket.css';
 import { format, add } from 'date-fns';
 
 function Ticket({ ticketInfo }) {
+  let priceFormat = new Intl.NumberFormat('ru-RU', {
+    style: 'currency',
+    currency: 'RUB',
+    maximumFractionDigits: 0,
+  });
   const ticketDetails = ticketInfo.segments.map((elem) => {
     const hours = Math.floor(elem.duration / 60);
     const minutes = elem.duration % 60;
@@ -42,7 +47,7 @@ function Ticket({ ticketInfo }) {
   return (
     <Card className="ticket" bodyStyle={{ padding: '10px' }}>
       <div className="ticket__price">
-        <p className="ticket__price__tag">{ticketInfo.price}</p>
+        <p className="ticket__price__tag">{priceFormat.format(ticketInfo.price)}</p>
         <img className="ticket__price__img" src={`https://pics.avs.io/99/36/${ticketInfo.carrier}.svg`} />
       </div>
       {ticketDetails}

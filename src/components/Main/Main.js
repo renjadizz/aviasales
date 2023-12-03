@@ -14,6 +14,7 @@ function Main({ tickets, getTicketsThunkCreator, showMoreTickets }) {
   const handleShowMoreTickets = () => {
     showMoreTickets();
   };
+
   const { loading, error, page } = tickets;
   let ticketElem = null;
   let lastTicket = page + 5;
