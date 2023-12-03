@@ -23,7 +23,7 @@ const getTicketsThunkCreator = () => {
   return async (dispatch) => {
     dispatch(isLoading(true));
     let searchId = sessionStorage.getItem('searchId');
-    if (!searchId || searchId === 'null') {
+    if (!searchId) {
       searchId = await data.getSearchId();
       if (searchId instanceof Error) {
         dispatch(addError(searchId));
@@ -38,10 +38,10 @@ const getTicketsThunkCreator = () => {
       let tickets = await data.geTickets(searchId);
       if (tickets instanceof Error) {
         dispatch(addError(tickets));
-        sessionStorage.setItem('searchId', null);
       } else {
+        let stop = tickets.stop;
         tickets = tickets.tickets;
-        dispatch(addTickets(tickets));
+        dispatch(addTickets({ tickets, stop }));
       }
       dispatch(isLoading(false));
     }

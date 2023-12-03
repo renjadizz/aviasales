@@ -1,18 +1,23 @@
 import { Flex, Button } from 'antd';
 import { connect } from 'react-redux';
 import { useEffect } from 'react';
+import uniqueId from 'lodash/uniqueId';
 
 import { propComparator } from '../../utils/sortingHelper';
 import { propFiltrator } from '../../utils/filterHelper';
 import { getTicketsThunkCreator, showMoreTickets } from '../../redux/actions/tickets';
 import Ticket from '../Ticket/Ticket';
 import Error from '../Error/Error';
+
 import './Main.css';
 
 function Main({ filters, sorting, tickets, getTicketsThunkCreator, showMoreTickets }) {
   useEffect(() => {
     getTicketsThunkCreator();
   }, []);
+  useEffect(() => {
+    if (!tickets.stop) getTicketsThunkCreator();
+  }, [tickets.tickets, tickets.error]);
   const handleShowMoreTickets = () => {
     showMoreTickets();
   };
@@ -37,17 +42,18 @@ function Main({ filters, sorting, tickets, getTicketsThunkCreator, showMoreTicke
   }
   if (error) {
     errorElem = <Error message={error.message} />;
-  } else {
-    if (tickets.tickets.length > 0) {
-      ticketElem = ticketArray.slice(0, lastTicket).map((elem) => {
-        return <Ticket key={elem.carrier + elem.price + elem.segments[0].duration} ticketInfo={elem} />;
-      });
-      buttonElem = (
-        <Button type="primary" className="ticket__btn" onClick={handleShowMoreTickets}>
-          ПОКАЗАТЬ ЕЩЕ 5 БИЛЕТОВ!
-        </Button>
-      );
-    }
+  }
+  if (tickets.tickets.length > 0) {
+    ticketElem = ticketArray.slice(0, lastTicket).map((elem) => {
+      return <Ticket key={uniqueId()} ticketInfo={elem} />;
+    });
+    buttonElem = (
+      <Button type="primary" className="ticket__btn" onClick={handleShowMoreTickets}>
+        ПОКАЗАТЬ ЕЩЕ 5 БИЛЕТОВ!
+      </Button>
+    );
+  } else if (tickets.tickets.length === 0 && loading !== true) {
+    ticketElem = <div className="ticket__not-found">Рейсов, подходящих под заданные фильтры, не найдено</div>;
   }
   let loadingElem = null;
   if (loading) {
@@ -56,8 +62,8 @@ function Main({ filters, sorting, tickets, getTicketsThunkCreator, showMoreTicke
   return (
     <Flex vertical>
       {loadingElem}
-      {errorElem}
       {ticketElem}
+      {errorElem}
       {buttonElem}
     </Flex>
   );

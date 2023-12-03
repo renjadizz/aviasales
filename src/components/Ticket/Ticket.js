@@ -1,7 +1,7 @@
 import { Card } from 'antd';
 import './Ticket.css';
 import { format, add } from 'date-fns';
-
+import uniqueId from 'lodash/uniqueId';
 function Ticket({ ticketInfo }) {
   let priceFormat = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -22,7 +22,7 @@ function Ticket({ ticketInfo }) {
       transferAmount = `${elem.stops.length} пересадки`;
     }
     return (
-      <div className="ticket__flights" key={elem.origin + elem.destination + elem.duration}>
+      <div className="ticket__flights" key={uniqueId()}>
         <div className="ticket__flights__places">
           <p className="ticket__flights__header">
             {elem.origin} – {elem.destination}
