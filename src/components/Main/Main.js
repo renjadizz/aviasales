@@ -2,29 +2,33 @@ import { Flex, Button } from 'antd';
 import { connect } from 'react-redux';
 import { useEffect } from 'react';
 
+import { propComparator } from '../../utils/sortingHelper';
 import { getTicketsThunkCreator, showMoreTickets } from '../../redux/actions/tickets';
 import Ticket from '../Ticket/Ticket';
 import Error from '../Error/Error';
 import './Main.css';
 
-function Main({ tickets, getTicketsThunkCreator, showMoreTickets }) {
+function Main({ sorting, tickets, getTicketsThunkCreator, showMoreTickets }) {
   useEffect(() => {
     getTicketsThunkCreator();
   }, []);
   const handleShowMoreTickets = () => {
     showMoreTickets();
   };
-
   const { loading, error, page } = tickets;
   let ticketElem = null;
   let lastTicket = page + 5;
   let errorElem = null;
   let buttonElem = null;
+  let ticketArray = tickets.tickets;
+  if (sorting !== null) {
+    ticketArray = tickets.tickets.sort(propComparator(sorting));
+  }
   if (error) {
     errorElem = <Error message={error.message} />;
   } else {
     if (tickets.tickets.length > 0) {
-      ticketElem = tickets.tickets.slice(0, lastTicket).map((elem) => {
+      ticketElem = ticketArray.slice(0, lastTicket).map((elem) => {
         return <Ticket key={elem.carrier + elem.price + elem.segments[0].duration} ticketInfo={elem} />;
       });
       buttonElem = (
@@ -50,6 +54,7 @@ function Main({ tickets, getTicketsThunkCreator, showMoreTickets }) {
 const mapStateToProps = (state) => {
   return {
     tickets: state.tickets,
+    sorting: state.sorting,
   };
 };
 const mapDispatchToProps = {
