@@ -2,6 +2,7 @@ const initialState = {
   tickets: [],
   loading: false,
   error: null,
+  page: 0,
 };
 
 function tickets(state = initialState, action) {

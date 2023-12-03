@@ -4,31 +4,49 @@ import { useEffect } from 'react';
 
 import { getTicketsThunkCreator } from '../../redux/actions/tickets';
 import Ticket from '../Ticket/Ticket';
-
+import Error from '../Error/Error';
 import './Main.css';
 
-function Main(props) {
+function Main({ tickets, getTicketsThunkCreator }) {
   useEffect(() => {
-    props.getTicketsThunkCreator();
+    getTicketsThunkCreator();
   }, []);
+  const { loading, error, page } = tickets;
   let ticketElem = null;
-  if (props.tickets.tickets.length > 0) {
-    ticketElem = props.tickets.tickets.map((elem) => {
-      return <Ticket key={elem.carrier + elem.price + elem.segments[0].duration} ticketInfo={elem} />;
-    });
+  let lastTicket = page + 5 - 1;
+  let errorElem = null;
+  let buttonElem = null;
+  if (error) {
+    errorElem = <Error message={error.message} />;
+  } else {
+    if (tickets.tickets.length > 0) {
+      ticketElem = tickets.tickets.slice(page, lastTicket).map((elem) => {
+        return <Ticket key={elem.carrier + elem.price + elem.segments[0].duration} ticketInfo={elem} />;
+      });
+      buttonElem = (
+        <Button type="primary" className="ticket__btn">
+          ПОКАЗАТЬ ЕЩЕ 5 БИЛЕТОВ!
+        </Button>
+      );
+    }
   }
-
+  let loadingElem = null;
+  if (loading) {
+    loadingElem = <div>loading</div>;
+  }
   return (
     <Flex vertical>
+      {loadingElem}
+      {errorElem}
       {ticketElem}
-      <Button type="primary" className="ticket__btn">
-        ПОКАЗАТЬ ЕЩЕ 5 БИЛЕТОВ!
-      </Button>
+      {buttonElem}
     </Flex>
   );
 }
 const mapStateToProps = (state) => {
-  return { tickets: state.tickets, loading: state.loading };
+  return {
+    tickets: state.tickets,
+  };
 };
 const mapDispatchToProps = {
   getTicketsThunkCreator,

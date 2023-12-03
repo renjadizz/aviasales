@@ -16,7 +16,6 @@ class ticketApiService {
         throw new ResourceError('Error number is ' + res.status);
       }
       const resJson = await res.json();
-      //console.log(resJson);
       return resJson;
     } catch (error) {
       return error;

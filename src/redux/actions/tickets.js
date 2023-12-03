@@ -25,17 +25,26 @@ const getTicketsThunkCreator = () => {
     let searchId = sessionStorage.getItem('searchId');
     if (!searchId) {
       searchId = await data.getSearchId();
-      searchId = searchId.searchId;
-      sessionStorage.setItem('searchId', searchId);
+      if (searchId instanceof Error) {
+        dispatch(addError(searchId));
+        searchId = null;
+        sessionStorage.setItem('searchId', searchId);
+      } else {
+        searchId = searchId.searchId;
+        sessionStorage.setItem('searchId', searchId);
+      }
     }
-    let tickets = await data.geTickets(searchId);
-    tickets = tickets.tickets;
-    if (tickets instanceof Error) {
-      dispatch(addError(tickets));
-    } else {
-      dispatch(addTickets(tickets));
+    if (searchId) {
+      let tickets = await data.geTickets(searchId);
+      if (tickets instanceof Error) {
+        dispatch(addError(tickets));
+        sessionStorage.setItem('searchId', null);
+      } else {
+        tickets = tickets.tickets;
+        dispatch(addTickets(tickets));
+      }
+      dispatch(isLoading(false));
     }
-    dispatch(isLoading(false));
   };
 };
 export { getTicketsThunkCreator };
