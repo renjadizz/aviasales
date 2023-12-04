@@ -1,27 +1,39 @@
-import { Flex, Button } from 'antd';
+import { Flex, Button, Progress } from 'antd';
 import { connect } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import uniqueId from 'lodash/uniqueId';
 
 import { propComparator } from '../../utils/sortingHelper';
 import { propFiltrator } from '../../utils/filterHelper';
-import { getTicketsThunkCreator, showMoreTickets } from '../../redux/actions/tickets';
+import { getTicketsThunkCreator, showMoreTickets, isLoading } from '../../redux/actions/tickets';
 import Ticket from '../Ticket/Ticket';
 import Error from '../Error/Error';
 
 import './Main.css';
 
-function Main({ filters, sorting, tickets, getTicketsThunkCreator, showMoreTickets }) {
+function Main({ filters, sorting, tickets, getTicketsThunkCreator, showMoreTickets, isLoading }) {
+  const timer = useRef(null);
   useEffect(() => {
+    isLoading(true, 0);
     getTicketsThunkCreator();
+    return () => {
+      clearInterval(timer.current);
+    };
   }, []);
   useEffect(() => {
     if (!tickets.stop) getTicketsThunkCreator();
+    if (tickets.stop) isLoading(true, 100);
   }, [tickets.tickets, tickets.error]);
+  useEffect(() => {
+    if (tickets.chunk === 100)
+      timer.current = setTimeout(() => {
+        isLoading(false, 100);
+      }, 1000);
+  }, [tickets.chunk]);
   const handleShowMoreTickets = () => {
     showMoreTickets();
   };
-  const { loading, error, page } = tickets;
+  const { loading, error, page, chunk } = tickets;
   let ticketElem = null;
   let lastTicket = page + 5;
   let errorElem = null;
@@ -57,7 +69,7 @@ function Main({ filters, sorting, tickets, getTicketsThunkCreator, showMoreTicke
   }
   let loadingElem = null;
   if (loading) {
-    loadingElem = <div>loading</div>;
+    loadingElem = <Progress percent={chunk} />;
   }
   return (
     <Flex vertical>
@@ -78,5 +90,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   getTicketsThunkCreator,
   showMoreTickets,
+  isLoading,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

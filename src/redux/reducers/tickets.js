@@ -4,6 +4,7 @@ const initialState = {
   error: null,
   page: 0,
   stop: false,
+  chunk: 0,
 };
 
 function tickets(state = initialState, action) {
@@ -11,10 +12,16 @@ function tickets(state = initialState, action) {
     case 'FETCH_TICKETS_REQUEST':
       return {
         ...state,
-        loading: action.payload,
+        loading: action.payload.isValue,
+        chunk: action.payload.chunkValue,
       };
     case 'FETCH_TICKETS_SUCCESS':
-      return { ...state, tickets: [...state.tickets, ...action.payload.tickets], stop: action.payload.stop };
+      return {
+        ...state,
+        tickets: [...state.tickets, ...action.payload.tickets],
+        stop: action.payload.stop,
+        chunk: state.chunk + 2,
+      };
     case 'FETCH_TICKETS_FAILURE':
       return { ...state, error: action.payload };
     case 'SHOW_MORE_TICKETS':

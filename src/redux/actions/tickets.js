@@ -1,8 +1,8 @@
 import ticketApiService from '../../utils/ticketApiService';
-const isLoading = (value) => {
+const isLoading = (isValue, chunkValue) => {
   return {
     type: 'FETCH_TICKETS_REQUEST',
-    payload: value,
+    payload: { isValue, chunkValue },
   };
 };
 const addTickets = (tickets) => {
@@ -21,7 +21,6 @@ const addError = (error) => {
 const getTicketsThunkCreator = () => {
   let data = new ticketApiService();
   return async (dispatch) => {
-    dispatch(isLoading(true));
     let searchId = sessionStorage.getItem('searchId');
     if (!searchId) {
       searchId = await data.getSearchId();
@@ -43,7 +42,6 @@ const getTicketsThunkCreator = () => {
         tickets = tickets.tickets;
         dispatch(addTickets({ tickets, stop }));
       }
-      dispatch(isLoading(false));
     }
   };
 };
@@ -52,4 +50,4 @@ const showMoreTickets = () => {
     type: 'SHOW_MORE_TICKETS',
   };
 };
-export { getTicketsThunkCreator, showMoreTickets };
+export { getTicketsThunkCreator, showMoreTickets, isLoading };
