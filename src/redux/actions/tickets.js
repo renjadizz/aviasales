@@ -27,7 +27,7 @@ const getTicketsThunkCreator = () => {
       if (searchId instanceof Error) {
         dispatch(addError(searchId));
         searchId = null;
-        sessionStorage.setItem('searchId', searchId);
+        sessionStorage.removeItem('searchId');
       } else {
         searchId = searchId.searchId;
         sessionStorage.setItem('searchId', searchId);
@@ -41,6 +41,10 @@ const getTicketsThunkCreator = () => {
         let stop = tickets.stop;
         tickets = tickets.tickets;
         dispatch(addTickets({ tickets, stop }));
+        dispatch(addError(null));
+        if (stop) {
+          sessionStorage.removeItem('searchId');
+        }
       }
     }
   };
