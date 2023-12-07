@@ -57,7 +57,9 @@ function Main({ filters, sorting, tickets, getTicketsThunkCreator, showMoreTicke
   }
   if (error) {
     errorElem = <Error message={error.message} />;
+    if ((error.message = '500' && tickets.tickets)) errorElem = null;
   }
+
   if (ticketArray.length > 0) {
     ticketElem = ticketArray.slice(0, lastTicket).map((elem) => {
       return <Ticket key={uniqueId()} ticketInfo={elem} />;
