@@ -14,7 +14,7 @@ function Filter({ filters, filtersChanged }) {
       const checkAllChecked = newState.filter((obj) => obj.id !== 'filter_all' && obj.checked === true);
       if (checkAllChecked.length === filters.length - 1) {
         newState[0].checked = true;
-      } else if (checkAllChecked.length === 0) {
+      } else {
         newState[0].checked = false;
       }
     }

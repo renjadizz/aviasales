@@ -38,7 +38,7 @@ function Main({ filters, sorting, tickets, getTicketsThunkCreator, showMoreTicke
   let lastTicket = page + 5;
   let errorElem = null;
   let buttonElem = null;
-  let ticketArray = tickets.tickets;
+  let ticketArray = [];
   if (filters[0].checked !== true) {
     let filtersArray = [];
     for (const element of filters) {
@@ -46,8 +46,11 @@ function Main({ filters, sorting, tickets, getTicketsThunkCreator, showMoreTicke
         filtersArray.push(element.amount);
       }
     }
-    if (filtersArray.length > 0) ticketArray = ticketArray.filter(propFiltrator(filtersArray));
-  }
+    if (filtersArray.length > 0) {
+      ticketArray = tickets.tickets;
+      ticketArray = ticketArray.filter(propFiltrator(filtersArray));
+    }
+  } else ticketArray = tickets.tickets;
 
   if (sorting !== null) {
     ticketArray = ticketArray.sort(propComparator(sorting));
@@ -55,7 +58,7 @@ function Main({ filters, sorting, tickets, getTicketsThunkCreator, showMoreTicke
   if (error) {
     errorElem = <Error message={error.message} />;
   }
-  if (tickets.tickets.length > 0) {
+  if (ticketArray.length > 0) {
     ticketElem = ticketArray.slice(0, lastTicket).map((elem) => {
       return <Ticket key={uniqueId()} ticketInfo={elem} />;
     });
@@ -64,7 +67,7 @@ function Main({ filters, sorting, tickets, getTicketsThunkCreator, showMoreTicke
         ПОКАЗАТЬ ЕЩЕ 5 БИЛЕТОВ!
       </Button>
     );
-  } else if (tickets.tickets.length === 0 && loading !== true) {
+  } else if (ticketArray.length === 0 && loading !== true) {
     ticketElem = <div className="ticket__not-found">Рейсов, подходящих под заданные фильтры, не найдено</div>;
   }
   let loadingElem = null;
