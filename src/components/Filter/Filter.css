@@ -14,9 +14,9 @@
   gap: 10px;
 }
 .filter__group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 @media (max-width: 615px) {
   .filter__title {
