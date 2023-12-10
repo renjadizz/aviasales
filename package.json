@@ -64,8 +64,11 @@
     "lint-staged": "^15.0.2"
   },
   "lint-staged": {
-    "*.js": [
-      "npm run lint:fix"
+    "src/**/*.{js}": [
+      "npm run lint:fix "
+    ],
+    "src/**/*.{js,jsx,css}": [
+      "npm run format"
     ]
   }
 }
